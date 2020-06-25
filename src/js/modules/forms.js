@@ -1,23 +1,20 @@
-const forms = () => {
+import checkInputNumberOrNo from './checkInputNumberOrNo';
+
+const forms = (state) => {
 
     const form = document.querySelectorAll('form'),
-        input = document.querySelectorAll('input'),
-        phoneInputs = document.querySelectorAll('input[name="user_phone"');
+        input = document.querySelectorAll('input');
+        
+        checkInputNumberOrNo('input[name="user_phone"');
 
-        phoneInputs.forEach(item => {
-            item.addEventListener('input', () => {
-                item.value = item.value.replace(/\D/, '');
-            });
-        });
-
-    const messageStatus = {
+    const sendingStatus = {
         load: 'Загрузка...',
         success: 'Сообщение отправлено',
         err: 'Упс, что-то не так...'
     };
 
     const postData = async (url, data) => {
-        document.querySelector('.status').textContent = messageStatus.load;
+        document.querySelector('.status').textContent = sendingStatus.load;
         let result = await fetch(url, {
             method: 'POST',
             body: data
@@ -41,13 +38,18 @@ const forms = () => {
             item.appendChild(statusMessage);
 
             const formData = new FormData(item);
+            if (item.getAttribute("data-calc") === "end") {
+                for (let key in state) {
+                    formData.append(key, state[key]);
+                }
+            }
 
             postData('assets/server.php', formData)
                 .then(result => {
                     console.log(result);
-                    statusMessage.textContent = messageStatus.success;
+                    statusMessage.textContent = sendingStatus.success;
                 })
-                .catch(() => statusMessage.textContent = messageStatus.err)
+                .catch(() => statusMessage.textContent = sendingStatus.err)
                 .finally(() => {
                     clearInputs();
                     setTimeout(() => {
