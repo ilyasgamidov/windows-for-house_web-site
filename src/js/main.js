@@ -21,4 +21,8 @@ window.addEventListener('DOMContentLoaded', () => {
     forms(modalState);
     timer(".container1", deadline);
     images();
+
+    let fruits = ["Яблоко", "Апельсин", "Слива"];
+
+
 });
